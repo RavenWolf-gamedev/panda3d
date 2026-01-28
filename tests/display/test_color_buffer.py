@@ -116,7 +116,9 @@ def render_color_pixel(region, state, vertex_color=None):
     resulting color value."""
 
     # Skip auto-shader tests if we don't support Cg shaders.
-    if not region.window.gsg.supports_basic_shaders:
+    if not region.window.gsg.supports_basic_shaders or \
+       not region.window.gsg.get_supports_cg_profile("arbvp1") or \
+       not region.window.gsg.get_supports_cg_profile("arbfp1"):
         sattr = state.get_attrib(core.ShaderAttrib)
         if sattr and sattr.auto_shader():
             pytest.skip("Cannot test auto-shader without Cg shader support")

@@ -149,8 +149,10 @@ jobs:
         echo "EGL_PLATFORM=surfaceless" >> $GITHUB_ENV
         echo "EGL_LOG_LEVEL=debug" >> $GITHUB_ENV
         mkdir -p build/etc
-        echo "load-display p3headlessgl" >> build/etc/10_ci.prc
-        echo "notify-level-egldisplay debug" >> build/etc/10_ci.prc
+        echo "load-display p3headlessgl" >> build/etc/panda3d/10_ci.prc
+        echo "notify-level-egldisplay debug" >> build/etc/panda3d/10_ci.prc
+        echo "notify-level-glgsg debug" >> built/etc/panda3d/ci.prc
+        echo "notify-level-shader debug" >> built/etc/panda3d/ci.prc
 
     - name: Test headless OpenGL
       run: |
@@ -406,6 +408,8 @@ jobs:
         mkdir -p built/etc
         echo "load-display p3headlessgl" >> built/etc/ci.prc
         echo "notify-level-egldisplay debug" >> built/etc/ci.prc
+        echo "notify-level-glgsg debug" >> built/etc/ci.prc
+        echo "notify-level-shader debug" >> built/etc/ci.prc
 
     - name: Test headless OpenGL
       run: |

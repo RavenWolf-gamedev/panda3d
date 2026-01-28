@@ -76,7 +76,7 @@ jobs:
         ls -la /usr/share/glvnd/egl_vendor.d/ 2>/dev/null || echo "No EGL vendors"
 
         # Try with debug output
-        EGL_LOG_LEVEL=debug eglinfo
+        EGL_LOG_LEVEL=debug eglinfo -p surfaceless
 
-        eglinfo || true
+        eglinfo -p surfaceless || true
         glxinfo

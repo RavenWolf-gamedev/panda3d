@@ -42,6 +42,27 @@ jobs:
         echo "GALLIUM_DRIVER=llvmpipe" >> $GITHUB_ENV
         echo "EGL_PLATFORM=surfaceless" >> $GITHUB_ENV
 
+    - name: Test surfaceless EGL
+      run: |
+        cat > /tmp/test_egl.c << 'EOF'
+        #include <EGL/egl.h>
+        #include <EGL/eglext.h>
+        #include <stdio.h>
+        #define EGL_PLATFORM_SURFACELESS_MESA 0x31DD
+        int main() {
+            EGLDisplay dpy = eglGetPlatformDisplay(EGL_PLATFORM_SURFACELESS_MESA, EGL_DEFAULT_DISPLAY, NULL);
+            if (dpy == EGL_NO_DISPLAY) { printf("No display\n"); return 1; }
+            EGLint major, minor;
+            if (!eglInitialize(dpy, &major, &minor)) { printf("Init failed: 0x%x\n", eglGetError()); return 1; }
+            printf("EGL %d.%d\n", major, minor);
+            printf("Vendor: %s\n", eglQueryString(dpy, EGL_VENDOR));
+            eglTerminate(dpy);
+            return 0;
+        }
+        EOF
+        gcc /tmp/test_egl.c -o /tmp/test_egl -lEGL
+        LIBGL_ALWAYS_SOFTWARE=1 /tmp/test_egl
+
     - name: Test Mesa setup
       shell: bash
       run: |

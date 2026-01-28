@@ -14,7 +14,7 @@ jobs:
       if: matrix.os == 'ubuntu-22.04'
       run: |
         sudo apt-get update
-        sudo apt-get install build-essential bison flex libfreetype6-dev libgl1-mesa-dev libegl1-mesa-dev libgl1-mesa-dri mesa-utils-extra libjpeg-dev libode-dev libopenal-dev libpng-dev libssl-dev libvorbis-dev libx11-dev libxcursor-dev libxrandr-dev nvidia-cg-toolkit zlib1g-dev
+        sudo apt-get install build-essential bison flex libfreetype6-dev libgl1-mesa-dev libegl1-mesa-dev libgl1-mesa-dri mesa-utils-extra libgbm1 libjpeg-dev libode-dev libopenal-dev libpng-dev libssl-dev libvorbis-dev libx11-dev libxcursor-dev libxrandr-dev nvidia-cg-toolkit zlib1g-dev
     - name: Get thirdparty packages (Windows)
       if: runner.os == 'Windows'
       shell: powershell
@@ -39,11 +39,23 @@ jobs:
     - name: Set up headless OpenGL
       run: |
         echo "LIBGL_ALWAYS_SOFTWARE=1" >> $GITHUB_ENV
-        echo "MESA_LOADER_DRIVER_OVERRIDE=llvmpipe" >> $GITHUB_ENV
+        echo "GALLIUM_DRIVER=llvmpipe" >> $GITHUB_ENV
         echo "EGL_PLATFORM=surfaceless" >> $GITHUB_ENV
 
     - name: Test Mesa setup
       shell: bash
       run: |
+        # Check if llvmpipe driver exists
+        ls -la /usr/lib/x86_64-linux-gnu/dri/ | grep -E "(llvmpipe|swrast|kms_swrast)"
+
+        echo "=== DRI drivers ==="
+        ls -la /usr/lib/x86_64-linux-gnu/dri/ 2>/dev/null || echo "No DRI dir"
+
+        echo "=== EGL vendors ==="
+        ls -la /usr/share/glvnd/egl_vendor.d/ 2>/dev/null || echo "No EGL vendors"
+
+        # Try with debug output
+        EGL_LOG_LEVEL=debug eglinfo
+
         eglinfo || true
         glxinfo

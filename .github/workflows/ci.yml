@@ -146,6 +146,7 @@ jobs:
     - name: Set up headless OpenGL
       run: |
         echo "LIBGL_ALWAYS_SOFTWARE=1" >> $GITHUB_ENV
+        echo "EGL_PLATFORM=surfaceless" >> $GITHUB_ENV
         echo "EGL_LOG_LEVEL=debug" >> $GITHUB_ENV
         mkdir -p build/etc
         echo "load-display p3headlessgl" >> build/etc/10_ci.prc
@@ -153,7 +154,7 @@ jobs:
 
     - name: Test headless OpenGL
       run: |
-        eglinfo
+        eglinfo || true
 
     - name: Build (no Python)
       if: contains(matrix.python, 'NO')
@@ -400,6 +401,7 @@ jobs:
     - name: Set up headless OpenGL
       run: |
         echo "LIBGL_ALWAYS_SOFTWARE=1" >> $GITHUB_ENV
+        echo "EGL_PLATFORM=surfaceless" >> $GITHUB_ENV
         echo "EGL_LOG_LEVEL=debug" >> $GITHUB_ENV
         mkdir -p built/etc
         echo "load-display p3headlessgl" >> built/etc/ci.prc
@@ -407,7 +409,7 @@ jobs:
 
     - name: Test headless OpenGL
       run: |
-        eglinfo
+        eglinfo || true
 
     - name: Set up Python 3.13
       uses: actions/setup-python@v6

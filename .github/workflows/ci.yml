@@ -148,7 +148,7 @@ jobs:
         echo "LIBGL_ALWAYS_SOFTWARE=1" >> $GITHUB_ENV
         echo "EGL_PLATFORM=surfaceless" >> $GITHUB_ENV
         echo "EGL_LOG_LEVEL=debug" >> $GITHUB_ENV
-        mkdir -p build/etc
+        mkdir -p build/etc/panda3d
         echo "load-display p3headlessgl" >> build/etc/panda3d/10_ci.prc
         echo "notify-level-egldisplay debug" >> build/etc/panda3d/10_ci.prc
         echo "notify-level-glgsg debug" >> built/etc/panda3d/ci.prc
